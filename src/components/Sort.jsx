@@ -1,28 +1,6 @@
 import { useState } from "react";
 
-export default function Sort({setSortByType, filterByCategory, fetchPizzas={fetchPizzas}}) {
-  const [open, setOpen] = useState(false);
-  const list = ["rating", "price", "title"];
-
-  // const list = [
-  //     {"rating": "популярности"},
-  //     {"price": "цене"},
-  //     {"title": "алфавиту"}
-  // ];
-
-  const [selected, setSelected] = useState(0);
-  const sortName = list[selected]
-
-  const onClickListItem = (id) => {
-      setSelected(id)
-      setOpen(false)
-      setSortByType(list[id])
-      if(filterByCategory!=0){
-          fetchPizzas(`https://6758ac5360576a194d1170aa.mockapi.io/items?category=${filterByCategory}&sortBy=${list[id]}&order=desc`)
-      } else {
-          fetchPizzas(`https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy=${list[id]}&order=asc`)
-      }
-  }
+export default function Sort({sortByType, onChangeSort, list, selected, sortPopupOpen, setSortPopupOpen}) {
 
   return (
     <div className="sort">
@@ -40,16 +18,16 @@ export default function Sort({setSortByType, filterByCategory, fetchPizzas={fetc
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{sortName}</span>
+        <span onClick={() => setSortPopupOpen(!sortPopupOpen)}>{sortByType}</span>
       </div>
-      {open && (
+      {sortPopupOpen && (
         <div className="sort__popup">
           <ul>
             {list.map((item, id) => (
               <li
                 key={id}
                 className={id === selected ? "active" : ''}
-                onClick={() => onClickListItem(id)}
+                onClick={() => onChangeSort(id)}
               >
                   {item}
               </li>

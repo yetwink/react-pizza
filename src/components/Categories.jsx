@@ -1,8 +1,7 @@
 import React, {useState} from "react";
+import log from "eslint-plugin-react/lib/util/log.js";
 
-export default function Categories({fetchPizzas, setFilterByCategory, sortByType}) {
-
-    const [activeCategory, setActiveCategory] = useState(0)
+export default function Categories({activeCategoryId, onClickCategory}) {
 
     const categories = [
         'Все',
@@ -13,15 +12,16 @@ export default function Categories({fetchPizzas, setFilterByCategory, sortByType
         'Закрытые'
     ]
 
-    const changeActiveCategory = (index) => {
-        setActiveCategory(index)
-        setFilterByCategory(index)
-        if( index != 0){
-          fetchPizzas(`https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy&category=${index}&sortBy=${sortByType}&order=desc`)
-        } else {
-            fetchPizzas('https://6758ac5360576a194d1170aa.mockapi.io/items')
-        }
-    }
+    // const changeActiveCategory = (index) => {
+    //     setActiveCategory(index)
+    //     setFilterByCategory(index)
+    //     if( index != 0){
+    //       fetchPizzas(`https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy&category=${index}&sortBy=${sortByType}&order=asc`)
+    //         console.log(sortByType)
+    //     } else {
+    //         fetchPizzas(`https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy=${sortByType}&order=asc`)
+    //     }
+    // }
 
 
     return (
@@ -29,8 +29,8 @@ export default function Categories({fetchPizzas, setFilterByCategory, sortByType
             <ul>
                 {
                     categories.map((item, index) => (
-                     <li onClick={() => changeActiveCategory(index)}
-                         className={index === activeCategory ? 'active' : '' }
+                     <li onClick={() => onClickCategory(index)}
+                         className={index === activeCategoryId ? 'active' : '' }
                          key={index}>{item}
                      </li>
                     ))
