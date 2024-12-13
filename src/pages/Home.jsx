@@ -29,11 +29,6 @@ const Home = () => {
 
     const onChangeCategory = (id) => {
         setActiveCategoryId(id)
-        let url = `https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy=${sortByType}&order=desc`
-        if(id !== 0) {
-            url = `https://6758ac5360576a194d1170aa.mockapi.io/items?category=${id}&sortBy=${sortByType}&order=desc`
-        }
-        fetchPizzas(url)
     }
 
     const [sortByType, setSortByType] = useState('rating')
@@ -45,20 +40,21 @@ const Home = () => {
         setSortByType(list[id])
         setSelected(id)
         setSortPopupOpen(false)
-        let url =`https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy=${list[id]}&order=desc`
-        if(activeCategoryId !== 0){
-            url = `https://6758ac5360576a194d1170aa.mockapi.io/items?category=${activeCategoryId}&sortBy=${list[id]}&order=desc`
-        }
-        fetchPizzas(url)
     }
 
     // https://6758ac5360576a194d1170aa.mockapi.io/items?category=2&sortBy=rating&order=desc
 
 
     useEffect(() => {
-        fetchPizzas(`https://6758ac5360576a194d1170aa.mockapi.io/items`);
+        let url = `https://6758ac5360576a194d1170aa.mockapi.io/items?sortBy=${sortByType}&order=asc`
+
+        if(activeCategoryId !== 0){
+            url = `https://6758ac5360576a194d1170aa.mockapi.io/items?category=${activeCategoryId}&sortBy=${sortByType}&order=asc`
+        }
+
+        fetchPizzas(url);
         window.scrollTo(0,0)
-    }, []);
+    }, [activeCategoryId, sortByType]);
 
     return (
         <>
