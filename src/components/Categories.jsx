@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import log from "eslint-plugin-react/lib/util/log.js";
 
-export default function Categories({ activeCategoryId, onClickCategory }) {
+import { useDispatch, useSelector } from "react-redux";
+import {setCategoryId} from "../redux/slices/filterSlice.js";
+
+export default function Categories() {
   const categories = [
     "Все",
     "Мясные",
@@ -10,6 +11,12 @@ export default function Categories({ activeCategoryId, onClickCategory }) {
     "Острые",
     "Закрытые",
   ];
+  const categoryId = useSelector((state) => state.filter.categoryId);
+  const dispatch = useDispatch();
+
+  const onClickCategory = (index) => {
+    dispatch(setCategoryId(index));
+  };
 
   return (
     <div className="categories">
@@ -17,7 +24,7 @@ export default function Categories({ activeCategoryId, onClickCategory }) {
         {categories.map((item, index) => (
           <li
             onClick={() => onClickCategory(index)}
-            className={index === activeCategoryId ? "active" : ""}
+            className={index === categoryId ? "active" : ""}
             key={index}
           >
             {item}

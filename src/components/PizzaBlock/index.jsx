@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Index({ title, price, imageUrl, types, sizes }) {
+export default function PizzaBlock({ title, price, imageUrl, types, sizes }) {
   // const [pizzaCount, setPizzaCount] = useState(0);
   //
   // const increasePizza = () => {

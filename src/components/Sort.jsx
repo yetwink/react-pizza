@@ -1,6 +1,23 @@
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSortType } from "../redux/slices/filterSlice.js";
 
+const list = [
+  { id: 0, name: "популярности", sortProperty: "rating" },
+  { id: 1, name: "цене", sortProperty: "price" },
+  { id: 2, name: "алфавиту", sortProperty: "title" },
+];
 
-export default function Sort({sortByType, onChangeSort, list, selected, sortPopupOpen, setSortPopupOpen}) {
+export default function Sort() {
+  const dispatch = useDispatch();
+  const currentSortValue = useSelector((state) => state.filter.sort);
+
+  const [sortPopupOpen, setSortPopupOpen] = useState(false);
+
+  const onChangeSort = (id) => {
+    dispatch(setSortType(list[id]));
+    setSortPopupOpen(false);
+  };
 
   return (
     <div className="sort">
@@ -18,7 +35,9 @@ export default function Sort({sortByType, onChangeSort, list, selected, sortPopu
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setSortPopupOpen(!sortPopupOpen)}>{sortByType}</span>
+        <span onClick={() => setSortPopupOpen(!sortPopupOpen)}>
+          {currentSortValue.name}
+        </span>
       </div>
       {sortPopupOpen && (
         <div className="sort__popup">
@@ -26,10 +45,10 @@ export default function Sort({sortByType, onChangeSort, list, selected, sortPopu
             {list.map((item, id) => (
               <li
                 key={id}
-                className={id === selected ? "active" : ''}
+                className={id === currentSortValue.id ? "active" : ""}
                 onClick={() => onChangeSort(id)}
               >
-                  {item}
+                {item.name}
               </li>
             ))}
           </ul>
