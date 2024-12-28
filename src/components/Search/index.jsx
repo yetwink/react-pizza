@@ -1,33 +1,33 @@
 import styles from "./Search.module.scss";
-import {useContext, useRef} from "react";
-import {SearchContext} from "../../App.jsx";
-import debounce from 'lodash.debounce'
-import {current} from "@reduxjs/toolkit";
-
+import { useCallback, useContext, useRef, useState } from "react";
+import { SearchContext } from "../../App.jsx";
+import debounce from "lodash.debounce";
 
 const Search = () => {
-    const { searchValue, setSearchValue } = useContext(SearchContext)
-    const inputRef = useRef()
+  const [value, setValue] = useState("");
+  const { searchValue, setSearchValue } = useContext(SearchContext);
+  const inputRef = useRef();
 
-    const onClickClose = () => {
-        setSearchValue('')
-        inputRef.current.focus()
-    }
+  const updateSearchValue = useCallback(
+    debounce((value) => {
+      setSearchValue(value);
+      console.log('search fetch')
+    }, 300),
+    [],
+  );
 
-    const testDebounce = debounce(() => {
-        console.log('hello')
-    }, 1000)
+  const onClickClose = () => {
+    setSearchValue("");
+    setValue("");
+    inputRef.current.focus();
+  };
 
+  const onChangeInput = (e) => {
+    setValue(e.target.value);
+    updateSearchValue(e.target.value);
+  };
 
-    const onChangeInput = (e) => {
-        setSearchValue(e.target.value)
-        testDebounce()
-    }
-
-
-
-
-    return (
+  return (
     <div className={styles.root}>
       <svg
         className={styles.icon}
@@ -42,29 +42,26 @@ const Search = () => {
       </svg>
       <input
         ref={inputRef}
-        value={searchValue}
+        value={value}
         onChange={onChangeInput}
         className={styles.input}
         type="text"
         placeholder={"Поиск пиццы..."}
       />
-      {
-          searchValue && (
-              <svg
-                  onClick={onClickClose}
-                  className={styles.new}
-                  viewBox="0 0 32 32"
-                  xmlns="http://www.w3.org/2000/svg"
-              >
-                  <title/>
-                  <g id="cross">
-                      <line x1="7" x2="25" y1="7" y2="25"/>
-                      <line x1="7" x2="25" y1="25" y2="7"/>
-                  </g>
-              </svg>
-          )
-      }
-
+      {searchValue && (
+        <svg
+          onClick={onClickClose}
+          className={styles.new}
+          viewBox="0 0 32 32"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <title />
+          <g id="cross">
+            <line x1="7" x2="25" y1="7" y2="25" />
+            <line x1="7" x2="25" y1="25" y2="7" />
+          </g>
+        </svg>
+      )}
     </div>
   );
 };

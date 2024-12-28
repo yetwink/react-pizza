@@ -1,8 +1,9 @@
-import { useState } from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSortType } from "../redux/slices/filterSlice.js";
 
-const list = [
+
+export const sortList = [
   { id: 0, name: "популярности", sortProperty: "rating" },
   { id: 1, name: "цене", sortProperty: "price" },
   { id: 2, name: "алфавиту", sortProperty: "title" },
@@ -11,16 +12,31 @@ const list = [
 export default function Sort() {
   const dispatch = useDispatch();
   const currentSortValue = useSelector((state) => state.filter.sort);
+  const sortRef = useRef()
 
   const [sortPopupOpen, setSortPopupOpen] = useState(false);
 
   const onChangeSort = (id) => {
-    dispatch(setSortType(list[id]));
+    dispatch(setSortType(sortList[id]));
     setSortPopupOpen(false);
   };
 
+  const sortPopupCallback = useCallback(
+      (e) => {
+        if(!e.composedPath().includes(sortRef.current)){
+          setSortPopupOpen(false)
+        }
+      }
+  )
+
+  useEffect(()=>{
+    document.body.addEventListener('click', sortPopupCallback)
+
+    return () => document.body.removeEventListener('click', sortPopupCallback)
+  },[])
+
   return (
-    <div className="sort">
+    <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
@@ -42,7 +58,7 @@ export default function Sort() {
       {sortPopupOpen && (
         <div className="sort__popup">
           <ul>
-            {list.map((item, id) => (
+            {sortList.map((item, id) => (
               <li
                 key={id}
                 className={id === currentSortValue.id ? "active" : ""}
